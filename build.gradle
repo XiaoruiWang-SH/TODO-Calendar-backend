@@ -16,5 +16,5 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	implementation 'com.mysql:mysql-connector-j:8.0.33'
+	implementation 'org.hsqldb:hsqldb:2.7.2'
 }
