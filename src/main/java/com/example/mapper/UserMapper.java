@@ -1,0 +1,32 @@
+/*
+ * @Author: Xiaorui Wang
+ * @Email: xiaorui.wang@usi.ch
+ * @Date: 2025-03-26 09:25:17
+ * @LastEditors: Xiaorui Wang
+ * @LastEditTime: 2025-03-26 09:49:04
+ * @Description: 
+ * Copyright (c) 2025 by Xiaorui Wang, All Rights Reserved. 
+ */
+package com.example.mapper;
+
+import com.example.model.User;
+import org.apache.ibatis.annotations.*;
+import java.util.List;
+
+@Mapper
+public interface UserMapper {
+    @Select("SELECT * FROM users")
+    List<User> findAll();
+
+    @Select("SELECT * FROM users WHERE id = #{id}")
+    User findById(@Param("id") int id);
+
+    @Insert("INSERT INTO users (id, name, email, password) VALUES (#{user.id}, #{user.name}, #{user.email}, #{user.password})")
+    int insert(@Param("user") User user);
+
+    @Update("UPDATE users SET name = #{user.name}, email = #{user.email}, password = #{user.password} WHERE id = #{user.id}")
+    int update(@Param("user") User user);
+
+    @Delete("DELETE FROM users WHERE id = #{id}")
+    int delete(@Param("id") int id);
+} 
