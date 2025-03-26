@@ -3,7 +3,7 @@
  * @Email: xiaorui.wang@usi.ch
  * @Date: 2025-03-25 16:40:52
  * @LastEditors: Xiaorui Wang
- * @LastEditTime: 2025-03-26 09:25:14
+ * @LastEditTime: 2025-03-26 10:03:46
  * @Description: 
  * Copyright (c) 2025 by Xiaorui Wang, All Rights Reserved. 
  */
@@ -14,8 +14,10 @@ import com.example.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class UserService {
     private final UserMapper userMapper;
     
