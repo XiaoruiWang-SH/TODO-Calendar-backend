@@ -3,7 +3,7 @@
  * @Email: xiaorui.wang@usi.ch
  * @Date: 2025-03-25 16:40:52
  * @LastEditors: Xiaorui Wang
- * @LastEditTime: 2025-03-26 10:03:46
+ * @LastEditTime: 2025-03-27 14:01:16
  * @Description: 
  * Copyright (c) 2025 by Xiaorui Wang, All Rights Reserved. 
  */
@@ -29,9 +29,9 @@ public class UserService {
     public List<User> getAllUsers() {
         return userMapper.findAll();
     }
-
-    public User getUserById(int id) {
-        return userMapper.findById(id);
+    
+    public User getUserByEmailAndPassword(String email, String password) {
+        return userMapper.findByEmailAndPassword(email, password);
     }
 
     public int createUser(User user) {

@@ -16,10 +16,7 @@ CREATE TABLE calendar (
     createTime DATETIME NOT NULL,
     expireTime DATETIME,
     updateTime DATETIME NOT NULL,
-    createDate DATE NOT NULL
+    createDate DATE NOT NULL,
+    userId INT NOT NULL
 );
 
-INSERT INTO users (id, name, email, password) VALUES 
-(1, 'John Doe', 'john.doe@example.com', 'password'),
-(2, 'Jane Smith', 'jane.smith@example.com', 'password'),
-(3, 'Alice Johnson', 'alice.johnson@example.com', 'password');
