@@ -18,5 +18,5 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
 	// implementation 'org.hsqldb:hsqldb:2.7.2'
-	implementation 'mysql:mysql-connector-java:8.0.33'
+	implementation 'com.mysql:mysql-connector-j:9.1.0'
 }
