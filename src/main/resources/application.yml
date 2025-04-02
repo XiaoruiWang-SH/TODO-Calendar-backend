@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: todo-calendar
+  datasource:
+    url: jdbc:mysql://localhost:3306/todocalendar?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    username: xiaoruiwang
+    password: 19920503
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      # data-locations: classpath:data.sql
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+server:
+  port: 8080
+
+# logging.level.org.springframework.jdbc=DEBUG
+
