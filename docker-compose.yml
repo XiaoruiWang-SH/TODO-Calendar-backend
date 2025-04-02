@@ -8,8 +8,14 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=${ENV:-dev}
       - JVM_OPTS=${JVM_OPTS:-"-Xmx512m -Xms256m"}
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=${MYSQL_PORT:-3306}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-fake_db}
+      - MYSQL_USER=${MYSQL_USER:-fake_user}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-fake_password}
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     networks:
       - todo-network
 
@@ -18,14 +24,19 @@ services:
     ports:
       - "${MYSQL_PORT:-3306}:3306"
     environment:
-      - MYSQL_DATABASE=${MYSQL_DATABASE:-testdb}
-      - MYSQL_USER=${MYSQL_USER:-appuser}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-123456}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-password}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-fake_db}
+      - MYSQL_USER=${MYSQL_USER:-fake_user}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-fake_password}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-fake_password}
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
       - todo-network
+    healthcheck:  # 添加健康检查
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
 volumes:
   mysql-data:
@@ -33,3 +44,5 @@ volumes:
 networks:
   todo-network:
     driver: bridge
+
+

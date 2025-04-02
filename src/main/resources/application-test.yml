@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://mysql:3306/todocalendar_test?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
-    username: appuser
-    password: 123456
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:fake_db}?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USER:fake_user}
+    password: ${MYSQL_PASSWORD:fake_password}
     driver-class-name: com.mysql.cj.jdbc.Driver
   sql:
     init:
