@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   app:
@@ -8,11 +7,11 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=${ENV:-dev}
       - JVM_OPTS=${JVM_OPTS:-"-Xmx512m -Xms256m"}
-      - MYSQL_HOST=mysql
-      - MYSQL_PORT=${MYSQL_PORT:-3306}
-      - MYSQL_DATABASE=${MYSQL_DATABASE:-fake_db}
-      - MYSQL_USER=${MYSQL_USER:-fake_user}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-fake_password}
+      - MYSQL_HOST=${APP_MYSQL_HOST:-localhost}
+      - MYSQL_PORT=${APP_MYSQL_PORT:-3306}
+      - MYSQL_DATABASE=${APP_MYSQL_DATABASE:-fake_db}
+      - MYSQL_USER=${APP_MYSQL_USER:-fake_user}
+      - MYSQL_PASSWORD=${APP_MYSQL_PASSWORD:-fake_password}
     depends_on:
       mysql:
         condition: service_healthy

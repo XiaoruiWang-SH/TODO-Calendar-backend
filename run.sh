@@ -12,11 +12,16 @@ fi
 
 echo "Starting application in $ENV environment..."
 
-# Copy the appropriate .env file
-cp .env.$ENV .env
 
-# Run with docker compose
-docker compose down
-docker compose up --build -d
+case "$ENV" in
+  dev)
+    docker compose --project-name myapp_dev -f docker-compose-dev.yml  down
+    docker compose --project-name myapp_dev -f docker-compose-dev.yml --env-file .env.dev up --build -d
+    ;;
+  prod)
+    docker compose --project-name myapp_prod -f docker-compose-prod.yml  down
+    docker compose --project-name myapp_prod -f docker-compose-prod.yml --env-file .env.prod up --build -d
+    ;;
+esac
 
 echo "Application started successfully in $ENV environment!" 
