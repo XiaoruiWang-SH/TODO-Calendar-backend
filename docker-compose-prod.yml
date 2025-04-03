@@ -29,6 +29,7 @@ services:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-fake_password}
     volumes:
       - mysql-data:/var/lib/mysql
+      - ./init_${ENV}.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - todo-network
     healthcheck:  # 添加健康检查
