@@ -12,6 +12,14 @@ services:
       - MYSQL_DATABASE=${APP_MYSQL_DATABASE:-fake_db}
       - MYSQL_USER=${APP_MYSQL_USER:-fake_user}
       - MYSQL_PASSWORD=${APP_MYSQL_PASSWORD:-fake_password}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'  # Limit to 0.5 CPU cores
+          memory: 512M # Limit to 512MB RAM
+        reservations:
+          cpus: '0.2'  # Reserve 0.2 CPU cores
+          memory: 256M # Reserve 256MB RAM
     depends_on:
       mysql:
         condition: service_healthy
@@ -27,9 +35,17 @@ services:
       - MYSQL_USER=${MYSQL_USER:-fake_user}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD:-fake_password}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-fake_password}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'  # Limit to 0.5 CPU cores
+          memory: 1G # Limit to 512MB RAM
+        reservations:
+          cpus: '0.2'  # Reserve 0.2 CPU cores
+          memory: 256M # Reserve 256MB RAM
     volumes:
       - mysql-data:/var/lib/mysql
-      - ./init_${ENV}.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init_prod.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - todo-network
     healthcheck:  # 添加健康检查
