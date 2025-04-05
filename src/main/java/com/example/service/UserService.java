@@ -3,7 +3,7 @@
  * @Email: xiaorui.wang@usi.ch
  * @Date: 2025-03-25 16:40:52
  * @LastEditors: Xiaorui Wang
- * @LastEditTime: 2025-03-27 14:01:16
+ * @LastEditTime: 2025-04-05 14:41:48
  * @Description: 
  * Copyright (c) 2025 by Xiaorui Wang, All Rights Reserved. 
  */
@@ -16,10 +16,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
+
 @Service
 @Transactional
 public class UserService {
     private final UserMapper userMapper;
+    
     
     @Autowired
     public UserService(UserMapper userMapper) {
@@ -44,5 +46,16 @@ public class UserService {
 
     public int deleteUser(int id) {
         return userMapper.delete(id);
+    }
+
+    public boolean checkUserExists(String email) {
+        return userMapper.checkUserEmailExists(email) > 0;
+    }
+
+    public User getUserByEmail(String email) {
+        if (!checkUserExists(email)) {
+            return null;
+        }
+        return userMapper.findByEmail(email);
     }
 }
