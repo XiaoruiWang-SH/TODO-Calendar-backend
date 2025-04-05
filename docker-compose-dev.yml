@@ -44,7 +44,7 @@ services:
           cpus: '0.2'  # Reserve 0.2 CPU cores
           memory: 256M # Reserve 256MB RAM
     volumes:
-      - mysql-data:/var/lib/mysql
+      - myapp_dev_mysql-data:/var/lib/mysql
       - ./init_dev.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - todo-network
@@ -55,7 +55,7 @@ services:
       retries: 10
 
 volumes:
-  mysql-data:
+  myapp_dev_mysql-data:
 
 networks:
   todo-network:
