@@ -3,7 +3,7 @@
  * @Email: xiaorui.wang@usi.ch
  * @Date: 2025-04-05 13:57:26
  * @LastEditors: Xiaorui Wang
- * @LastEditTime: 2025-04-05 15:28:53
+ * @LastEditTime: 2025-04-06 08:07:02
  * @Description: 
  * Copyright (c) 2025 by Xiaorui Wang, All Rights Reserved. 
  */
@@ -19,6 +19,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import jakarta.annotation.Nonnull;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import java.util.Collections;
 
 public class JwtTokenFilter extends OncePerRequestFilter {
 
@@ -57,7 +60,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     
     private Authentication getAuthentication(String token) {
         String username = jwtTokenProvider.getUsernameFromToken(token);
-        // You might need to customize this part based on your authentication logic
-        return null; // Return a proper Authentication object based on your implementation
+        if (username != null) {
+            UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+                username, "", Collections.emptyList());
+            return new UsernamePasswordAuthenticationToken(
+                userDetails, "", userDetails.getAuthorities());
+        }
+        return null;
     }
 } 
