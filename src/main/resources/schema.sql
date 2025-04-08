@@ -3,18 +3,20 @@ CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS calendar (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    details VARCHAR(255),
     checked BOOLEAN NOT NULL,
     important BOOLEAN NOT NULL,
     createTime DATETIME NOT NULL,
     expireTime DATETIME,
     updateTime DATETIME NOT NULL,
     createDate DATE NOT NULL,
-    userId INT NOT NULL
+    userName VARCHAR(255) NOT NULL
 );
 

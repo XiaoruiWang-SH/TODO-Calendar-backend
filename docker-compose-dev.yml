@@ -1,12 +1,14 @@
-
 services:
   app:
     build: .
     ports:
       - "${APP_PORT:-8081}:8080"
+      - "5005:5005"  # Debug port
     environment:
       - SPRING_PROFILES_ACTIVE=${ENV:-dev}
       - JVM_OPTS=${JVM_OPTS:-"-Xmx512m -Xms256m"}
+      - JAVA_TOOL_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+      - JWT_SECRET=${JWT_SECRET:-default_jwt_secret_for_development}
       - MYSQL_HOST=${APP_MYSQL_HOST:-localhost}
       - MYSQL_PORT=${APP_MYSQL_PORT:-3306}
       - MYSQL_DATABASE=${APP_MYSQL_DATABASE:-fake_db}
@@ -29,7 +31,7 @@ services:
   mysql:
     image: mysql:8.0
     ports:
-      - "${MYSQL_PORT:-3307}:3306"
+      - "${MYSQL_PORT:-3367}:3306"
     environment:
       - MYSQL_DATABASE=${MYSQL_DATABASE:-fake_db}
       - MYSQL_USER=${MYSQL_USER:-fake_user}

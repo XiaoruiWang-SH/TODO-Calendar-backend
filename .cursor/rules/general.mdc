@@ -1,0 +1,29 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Project tech stacks
+- Java
+- Spring framework
+- Spring boot
+- Gradle
+- Mybatis
+- Mysql
+
+# Deploy
+- Docker
+- [docker-compose-dev.yml](mdc:docker-compose-dev.yml) for development enviroment and [docker-compose-prod.yml](mdc:docker-compose-prod.yml) for production environment, setting variable by injecting @.env.dev and @.env.prod files, launch and down docker by [run.sh](mdc:run.sh)
+- For database, don't use container's volume, always use host machine path: 
+
+# Running environment
+- It maybe running locally or remove server connected through ssh.
+- Always use existing terminal window, because it probably has already entered into right environment(local or remote)
+- If you can't find the correct existing terminal, try to use ssh to connect to remote environment, using this command "ssh -i /Users/raywang/.ssh/id_ed25519 root@164.92.198.234" to connect.
+
+
+# Git Commitment
+- Always generate simple sentence
+- Just say what I did, don't say for something or purpose
+- only one sentence, if content of commitment is a lot, onlysummarize main feature modification.

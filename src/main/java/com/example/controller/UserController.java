@@ -3,7 +3,7 @@
  * @Email: xiaorui.wang@usi.ch
  * @Date: 2025-03-25 16:49:17
  * @LastEditors: Xiaorui Wang
- * @LastEditTime: 2025-03-27 18:05:39
+ * @LastEditTime: 2025-04-08 08:32:27
  * @Description: 
  * @FilePath: /src/main/java/com/example/controller/UserController.java
  * Copyright (c) 2025 by Xiaorui Wang, All Rights Reserved. 
@@ -13,6 +13,7 @@ package com.example.controller;
 
 import com.example.model.User;
 import com.example.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,14 +52,6 @@ public class UserController {
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> createUser(@RequestBody User user) {
-        int result = userService.createUser(user);
-        if (result > 0) {
-            return ResponseEntity.ok(result);
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(-1);
-    }
     
     @PostMapping("/{id}")
     public ResponseEntity<?> updateUser(@RequestBody User user) {
@@ -77,5 +70,6 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(-1);
     }
+
 }
 

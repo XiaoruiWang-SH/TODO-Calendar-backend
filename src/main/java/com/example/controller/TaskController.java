@@ -3,7 +3,7 @@
  * @Email: xiaorui.wang@usi.ch
  * @Date: 2025-03-26 15:01:35
  * @LastEditors: Xiaorui Wang
- * @LastEditTime: 2025-03-27 17:56:38
+ * @LastEditTime: 2025-04-08 10:03:46
  * @Description: 
  * Copyright (c) 2025 by Xiaorui Wang, All Rights Reserved. 
  */
@@ -36,114 +36,64 @@ public class TaskController {
         String date = (String) params.get("date");
         String startDate = (String) params.get("startDate");
         String endDate = (String) params.get("endDate");
-        if (params.get("userId") == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("userId is required");
-        }
-        int userId = (int) params.get("userId");
-        if (userId < 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("userId is invalid");
-        }
-
+        
         if (date != null) {
-            List<Task> tasks = taskService.findByDate(date, userId);
+            List<Task> tasks = taskService.findByDate(date);
             if (tasks.isEmpty()) {
                 return ResponseEntity.ok(new ArrayList<>());
             }
             return ResponseEntity.ok(tasks);
         }
         if (startDate != null && endDate != null) {
-            List<Task> tasks = taskService.findByDateRange(startDate, endDate, userId);
+            List<Task> tasks = taskService.findByDateRange(startDate, endDate);
             if (tasks.isEmpty()) {
                 return ResponseEntity.ok(new ArrayList<>());
             }
             return ResponseEntity.ok(tasks);
         }
-        return ResponseEntity.ok(taskService.findAll(userId));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request");
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<?> getTaskById(@PathVariable("id") int id, @RequestBody Map<String, Object> params) {
-        if (params.get("userId") == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("userId is required");
-        }
-        int userId = (int) params.get("userId");
-        if (userId < 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("userId is invalid");
-        }
-        return ResponseEntity.ok(taskService.findById(id, userId));
-    }   
 
     @PostMapping("/create")
     public ResponseEntity<?> createTask(@RequestBody Map<String, Object> params) {
-        if (params.get("userId") == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("userId is required");
-        }
-        int userId = (int) params.get("userId");
-        if (userId < 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("userId is invalid");
-        }
-        
-        Map<String, Object> taskMap = (Map<String, Object>) params.get("task");
-        if (taskMap == null) {
+        if (params == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("task is required");
         }
-
         Task task = new Task();
-        task.setName((String) taskMap.get("name"));
-        task.setChecked((Boolean) taskMap.get("checked"));
-        task.setImportant((Boolean) taskMap.get("important"));
-        task.setCreateTime((String) taskMap.get("createTime"));
-        task.setExpireTime((String) taskMap.get("expireTime"));
-        task.setUpdateTime((String) taskMap.get("updateTime"));
-        task.setCreateDate((String) taskMap.get("createDate"));
-        task.setUserId(userId);
+        task.setTitle((String) params.get("title"));
+        task.setDetails((String) params.get("details"));
+        task.setChecked((Boolean) params.get("checked"));
+        task.setImportant((Boolean) params.get("important"));
+        task.setCreateTime((String) params.get("createTime"));
+        task.setExpireTime((String) params.get("expireTime"));
+        task.setUpdateTime((String) params.get("updateTime"));
+        task.setCreateDate((String) params.get("createDate"));
 
-        int result = taskService.insert(task, userId);
+        int result = taskService.insert(task);
         if (result > 0) {
             return ResponseEntity.ok(task.getId());
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(-1);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to create task");
     }
 
     @PostMapping("/update/{id}")
     public ResponseEntity<?> updateTask(@PathVariable("id") int id, @RequestBody Map<String, Object> params) {
-        if (params.get("userId") == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("userId is required");
-        }
-        int userId = (int) params.get("userId");
-        if (userId < 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("userId is invalid");
-        }
-        Map<String, Object> taskMap = (Map<String, Object>) params.get("task");
-        if (taskMap == null) {
+        if (params == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("task is required");
         }
 
         Task task = new Task();
-        task.setName((String) taskMap.get("name"));
-        task.setChecked((Boolean) taskMap.get("checked"));
-        task.setImportant((Boolean) taskMap.get("important"));
-        task.setCreateTime((String) taskMap.get("createTime"));
-        task.setExpireTime((String) taskMap.get("expireTime"));
-        task.setUpdateTime((String) taskMap.get("updateTime"));
-        task.setCreateDate((String) taskMap.get("createDate"));
-        task.setUserId(userId);
+        task.setTitle((String) params.get("title"));
+        task.setDetails((String) params.get("details"));
+        task.setChecked((Boolean) params.get("checked"));
+        task.setImportant((Boolean) params.get("important"));
+        task.setCreateTime((String) params.get("createTime"));
+        task.setExpireTime((String) params.get("expireTime"));
+        task.setUpdateTime((String) params.get("updateTime"));
+        task.setCreateDate((String) params.get("createDate"));
 
-        int result = taskService.update(task, id, userId);
-        return result > 0 ? ResponseEntity.ok(true) : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteTask(@PathVariable("id") int id, @RequestBody Map<String, Object> params) {
-        if (params.get("userId") == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("userId is required");
-        }
-        int userId = (int) params.get("userId");
-        if (userId < 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("userId is invalid");
-        }
-        int result = taskService.delete(id, userId);
-        return result > 0 ? ResponseEntity.ok(true) : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
-    }
-    
+        int result = taskService.update(task, id);
+        return result > 0 ? ResponseEntity.ok("update Success") : ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to update task");
+    }    
 }
