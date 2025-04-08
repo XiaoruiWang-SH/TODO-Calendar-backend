@@ -3,7 +3,7 @@
  * @Email: xiaorui.wang@usi.ch
  * @Date: 2025-03-26 15:02:06
  * @LastEditors: Xiaorui Wang
- * @LastEditTime: 2025-03-27 16:49:33
+ * @LastEditTime: 2025-04-08 08:14:26
  * @Description: 
  * Copyright (c) 2025 by Xiaorui Wang, All Rights Reserved. 
  */
@@ -14,43 +14,46 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UserDetails;
+import lombok.RequiredArgsConstructor;
+import com.example.model.User;
+import com.example.Tools.UserUtil;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class TaskService {
+    @Autowired
     private final TaskMapper taskMapper;
 
-    @Autowired
-    public TaskService(TaskMapper taskMapper) {
-        this.taskMapper = taskMapper;
+   
+    public Task findById(int id) {
+        return taskMapper.findById(id);
     }
 
-    public List<Task> findAll(int userId) {
-        return taskMapper.findAll(userId);
+    public List<Task> findByDate(String date) {
+        String userEmail = UserUtil.getCurrentUsername();
+        return taskMapper.findByDate(date, userEmail);
     }
 
-    public Task findById(int id, int userId) {
-        return taskMapper.findById(id, userId);
+    public List<Task> findByDateRange(String startDate, String endDate) {   
+        String userEmail = UserUtil.getCurrentUsername();
+        return taskMapper.findByDateRange(startDate, endDate, userEmail);
     }
 
-    public List<Task> findByDate(String date, int userId) {
-        return taskMapper.findByDate(date, userId);
+    public int update(Task task, int id) {
+        return taskMapper.update(task, id);
     }
 
-    public List<Task> findByDateRange(String startDate, String endDate, int userId) {
-        return taskMapper.findByDateRange(startDate, endDate, userId);
+    public int insert(Task task) {
+        String userEmail = UserUtil.getCurrentUsername();
+        return taskMapper.insert(task, userEmail);
     }
 
-    public int update(Task task, int id, int userId) {
-        return taskMapper.update(task, id, userId);
-    }
-
-    public int insert(Task task, int userId) {
-        return taskMapper.insert(task, userId);
-    }
-
-    public int delete(int id, int userId) {
-        return taskMapper.delete(id, userId);
+    public int delete(int id) {
+        String userEmail = UserUtil.getCurrentUsername();
+        return taskMapper.delete(id, userEmail);
     }
     
     

@@ -15,4 +15,7 @@ logging:
     root: INFO
     org.springframework.web: DEBUG
     com.example: DEBUG
-    org.springframework.jdbc: DEBUG 
+    org.springframework.jdbc: DEBUG
+    # Add MyBatis mapper logging
+    com.example.mapper: DEBUG
+    org.mybatis: DEBUG 

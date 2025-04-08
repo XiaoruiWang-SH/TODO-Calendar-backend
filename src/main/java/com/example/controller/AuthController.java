@@ -3,7 +3,7 @@
  * @Email: xiaorui.wang@usi.ch
  * @Date: 2025-04-05 14:19:07
  * @LastEditors: Xiaorui Wang
- * @LastEditTime: 2025-04-06 15:08:34
+ * @LastEditTime: 2025-04-08 09:21:44
  * @Description:    
  * Copyright (c) 2025 by Xiaorui Wang, All Rights Reserved. 
  */
@@ -58,6 +58,7 @@ public class AuthController {
         user.setName(registerRequest.getName());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setRole("USER");
         int result = userService.createUser(user);
         if (result <= 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -71,29 +72,23 @@ public class AuthController {
         } catch (Exception e) {
             System.out.println(e);
         }
-        long expiresIn = jwtTokenProvider.getExpirationTime() / 1000;
 
         ResponseCookie tokenCookie = ResponseCookie.from("access_token", token)
         .httpOnly(true)
         .path("/")
         .build();
 
-        ResponseCookie expiresInCookie = ResponseCookie.from("expiresIn", String.valueOf(expiresIn))
-        .httpOnly(true)
-        .path("/")
-        .build();
-
-
         HttpHeaders headers = new HttpHeaders();
         headers.add("Set-Cookie", tokenCookie.toString());
-        headers.add("Set-Cookie", expiresInCookie.toString());
         
         return ResponseEntity
             .ok()
             .headers(headers)
             .body(Map.of(
-                "accessToken", token,
-                "expiresIn", expiresIn
+                "id", user.getId(),
+                "name", user.getName(),
+                "email", user.getEmail(),
+                "role", userDetails.getAuthorities().iterator().next().getAuthority()
             ));
     }
 
@@ -117,29 +112,23 @@ public class AuthController {
         } catch (Exception e) {
             System.out.println(e);
         }
-        long expiresIn = jwtTokenProvider.getExpirationTime() / 1000;
 
         ResponseCookie tokenCookie = ResponseCookie.from("access_token", token)
         .httpOnly(true)
         .path("/")
         .build();
 
-        ResponseCookie expiresInCookie = ResponseCookie.from("expiresIn", String.valueOf(expiresIn))
-        .httpOnly(true)
-        .path("/")
-        .build();
-
-
         HttpHeaders headers = new HttpHeaders();
         headers.add("Set-Cookie", tokenCookie.toString());
-        headers.add("Set-Cookie", expiresInCookie.toString());
         
         return ResponseEntity
             .ok()
             .headers(headers)
             .body(Map.of(
-                "accessToken", token,
-                "expiresIn", expiresIn
+                "id", user.getId(),
+                "name", user.getName(),
+                "email", user.getEmail(),
+                "role", userDetails.getAuthorities().iterator().next().getAuthority()
             ));
     }
 }

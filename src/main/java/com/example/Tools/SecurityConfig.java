@@ -3,7 +3,7 @@
  * @Email: xiaorui.wang@usi.ch
  * @Date: 2025-04-05 13:56:26
  * @LastEditors: Xiaorui Wang
- * @LastEditTime: 2025-04-05 15:51:10
+ * @LastEditTime: 2025-04-08 08:32:43
  * @Description: 
  * Copyright (c) 2025 by Xiaorui Wang, All Rights Reserved. 
  */
@@ -41,7 +41,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/users/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .with(new JwtConfigurer(jwtTokenProvider), customizer -> {});
@@ -71,8 +71,13 @@ public class SecurityConfig {
             return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())
                 .password(user.getPassword())
-                .roles("USER") // Add default role - customize as needed
+                .roles(user.getRole())
                 .build();
         };
+    }
+
+    @Bean
+    public JwtTokenFilter jwtTokenFilter() {
+        return new JwtTokenFilter(jwtTokenProvider);
     }
 }
