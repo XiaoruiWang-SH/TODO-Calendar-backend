@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.service.UserService;
 import com.example.model.User;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -33,6 +34,11 @@ import com.example.model.User;
 public class SecurityConfig {
     @Autowired
     private final JwtTokenProvider jwtTokenProvider;
+
+    private static final List<String> PERMIT_ALL_PATHS = List.of(
+        "/api/auth/login",
+        "/api/auth/register"
+    );
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -44,7 +50,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/users/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
-            .with(new JwtConfigurer(jwtTokenProvider), customizer -> {});
+            .with(new JwtConfigurer(jwtTokenProvider, PERMIT_ALL_PATHS), customizer -> {});
 
         return http.build();
     }
@@ -78,6 +84,6 @@ public class SecurityConfig {
 
     @Bean
     public JwtTokenFilter jwtTokenFilter() {
-        return new JwtTokenFilter(jwtTokenProvider);
+        return new JwtTokenFilter(jwtTokenProvider, PERMIT_ALL_PATHS);
     }
 }
