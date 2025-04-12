@@ -29,11 +29,11 @@ public interface UserMapper {
     @Select("SELECT * FROM users WHERE email = #{email} AND password = #{password}")
     User findByEmailAndPassword(@Param("email") String email, @Param("password") String password);
 
-    @Insert("INSERT INTO users (name, email, password, role) VALUES (#{user.name}, #{user.email}, #{user.password}, #{user.role})")
+    @Insert("INSERT INTO users (name, email, password, role, provider, providerId) VALUES (#{user.name}, #{user.email}, #{user.password}, #{user.role}, #{user.provider}, #{user.providerId})")
     @Options(useGeneratedKeys = true, keyProperty = "user.id")
     int insert(@Param("user") User user);
 
-    @Update("UPDATE users SET name = #{user.name}, email = #{user.email}, password = #{user.password}, role = #{user.role} WHERE id = #{user.id}")
+    @Update("UPDATE users SET name = #{user.name}, email = #{user.email}, password = #{user.password}, role = #{user.role}, provider = #{user.provider}, providerId = #{user.providerId} WHERE id = #{user.id}")
     int update(@Param("user") User user);
 
     @Delete("DELETE FROM users WHERE id = #{id}")
