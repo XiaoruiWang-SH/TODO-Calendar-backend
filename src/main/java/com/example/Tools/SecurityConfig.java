@@ -3,7 +3,7 @@
  * @Email: xiaorui.wang@usi.ch
  * @Date: 2025-04-05 13:56:26
  * @LastEditors: Xiaorui Wang
- * @LastEditTime: 2025-04-12 14:24:06
+ * @LastEditTime: 2025-04-13 13:03:59
  * @Description: 
  * Copyright (c) 2025 by Xiaorui Wang, All Rights Reserved. 
  */
@@ -35,6 +35,10 @@ import com.example.model.User;
 import java.util.List;
 import java.io.IOException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import java.util.Map;
+import org.springframework.http.ResponseEntity;
 
 @Configuration
 @EnableWebSecurity
@@ -44,6 +48,8 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     @Autowired
     private final MyOAuth2UserService myOAuth2UserService;
+    @Autowired
+    private final UserService userService;
 
     private static final List<String> PERMIT_ALL_PATHS = List.of(
         "/api/auth/login",
@@ -55,7 +61,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/oauth2/**").permitAll()
@@ -115,27 +121,47 @@ public class SecurityConfig {
                 // Get OAuth2 user details
                 OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
                 
-                // Create UserDetails from OAuth2User for token generation
-                UserDetails userDetails = org.springframework.security.core.userdetails.User
-                    .withUsername(oAuth2User.getAttribute("email"))
-                    .password("") // OAuth2 users don't have a password stored in our system
-                    .roles("USER") // Default role
-                    .build();
+                // Get user from database
+                User user = userService.getUserByEmail(oAuth2User.getAttribute("email"));
                 
-                // Generate JWT token using the correct method
+                // Generate JWT token
+                UserDetails userDetails = org.springframework.security.core.userdetails.User
+                    .withUsername(user.getEmail())
+                    .password(user.getPassword())
+                    .roles(user.getRole())
+                    .build();
+                    
                 String token = jwtTokenProvider.generateToken(userDetails);
                 
-                // Set token as cookie
-                jakarta.servlet.http.Cookie tokenCookie = new jakarta.servlet.http.Cookie("access_token", token);
-                tokenCookie.setHttpOnly(true);
-                tokenCookie.setSecure(true);
-                tokenCookie.setPath("/");
-                tokenCookie.setMaxAge((int)(jwtTokenProvider.getExpirationTime() / 1000));
-                response.addCookie(tokenCookie);
+                // Create cookie with token
+                ResponseCookie tokenCookie = ResponseCookie.from("access_token", token)
+                    .httpOnly(true)
+                    .secure(true)
+                    .sameSite("Strict")
+                    .path("/")
+                    .maxAge(jwtTokenProvider.getExpirationTime() / 1000)
+                    .build();
+                
+                // Add cookie to response
+                response.addHeader(HttpHeaders.SET_COOKIE, tokenCookie.toString());
+                
+                // Get frontend URL
+                String frontendUrl = System.getenv("FRONTEND_URL");
+                if (frontendUrl == null || frontendUrl.isEmpty()) {
+                    frontendUrl = "https://todocalendar.live";
+                }
+                
+                // Add query parameters with user data
+                frontendUrl += "?auth=success" +
+                    "&id=" + user.getId() +
+                    "&name=" + java.net.URLEncoder.encode(user.getName(), "UTF-8") +
+                    "&email=" + java.net.URLEncoder.encode(user.getEmail(), "UTF-8") +
+                    "&role=" + user.getRole();
                 
                 // Redirect to frontend
-                response.sendRedirect("/");
-            } catch (IOException e) {
+                response.sendRedirect(frontendUrl);
+                System.out.println("Redirecting to frontend: " + frontendUrl);
+            } catch (Exception e) {
                 throw new RuntimeException("Error during OAuth2 authentication success", e);
             }
         };
@@ -148,6 +174,7 @@ public class SecurityConfig {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json");
                 response.getWriter().write("{\"error\":\"" + exception.getMessage() + "\"}");
+                System.out.println("Error during OAuth2 authentication failure: " + exception.getMessage());
             } catch (IOException e) {
                 throw new RuntimeException("Error during OAuth2 authentication failure", e);
             }
