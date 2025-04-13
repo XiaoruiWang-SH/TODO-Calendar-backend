@@ -14,6 +14,9 @@ services:
       - MYSQL_DATABASE=${APP_MYSQL_DATABASE:-fake_db}
       - MYSQL_USER=${APP_MYSQL_USER:-fake_user}
       - MYSQL_PASSWORD=${APP_MYSQL_PASSWORD:-fake_password}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-fake_client_id}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-fake_client_secret}
+      - FRONTEND_URL=${FRONTEND_URL:-https://dev.todocalendar.live}
     deploy:
       resources:
         limits:

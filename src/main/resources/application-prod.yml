@@ -9,6 +9,17 @@ spring:
       mode: always
       schema-locations: classpath:schema.sql
       # data-locations: classpath:data.sql
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: "https://api.todocalendar.live/api/oauth2/callback/google"
+            scope:
+              - email
+              - profile
 
 logging:
   level:
