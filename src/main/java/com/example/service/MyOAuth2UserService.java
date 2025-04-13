@@ -3,7 +3,7 @@
  * @Email: xiaorui.wang@usi.ch
  * @Date: 2025-04-12 08:09:26
  * @LastEditors: Xiaorui Wang
- * @LastEditTime: 2025-04-12 12:57:27
+ * @LastEditTime: 2025-04-13 15:14:39
  * @Description: 
  * Copyright (c) 2025 by Xiaorui Wang, All Rights Reserved. 
  */
@@ -38,6 +38,23 @@ public class MyOAuth2UserService extends DefaultOAuth2UserService {
         String providerId = oAuth2User.getName();
         String email = oAuth2User.getAttribute("email");
         String name = oAuth2User.getAttribute("name");
+        
+        // Handle GitHub's email access differently since email might be null
+        if (email == null && "github".equals(provider)) {
+            // For GitHub, use login as fallback when email is null
+            String login = oAuth2User.getAttribute("login");
+            
+            if (login != null) {
+                email = login + "@github.com";
+                System.out.println("Using GitHub login as email fallback: " + email);
+            } else {
+                throw new OAuth2AuthenticationException("Email is required for authentication");
+            }
+        }
+        
+        if (email == null) {
+            throw new OAuth2AuthenticationException("Email is required for authentication");
+        }
         
         // Find user by email (since email is unique in our system)
         User user = userMapper.findByEmail(email);
