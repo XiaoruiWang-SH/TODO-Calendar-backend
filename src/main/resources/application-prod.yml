@@ -20,6 +20,13 @@ spring:
             scope:
               - email
               - profile
+          github:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
+            redirect-uri: "https://api.todocalendar.live/api/oauth2/callback/github"
+            scope:
+              - read:user
+              - user:email
 
 logging:
   level:
