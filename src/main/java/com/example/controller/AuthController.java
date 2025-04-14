@@ -3,7 +3,7 @@
  * @Email: xiaorui.wang@usi.ch
  * @Date: 2025-04-05 14:19:07
  * @LastEditors: Xiaorui Wang
- * @LastEditTime: 2025-04-08 13:13:06
+ * @LastEditTime: 2025-04-14 07:47:40
  * @Description:    
  * Copyright (c) 2025 by Xiaorui Wang, All Rights Reserved. 
  */
@@ -154,6 +154,33 @@ public class AuthController {
                 .ok()
                 .headers(headers)
                 .body(Map.of("message", "Logged out successfully"));
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<?> getUserInfo(Authentication authentication) {
+        try {
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Not authenticated"));
+            }
+            
+            String email = authentication.getName();
+            User user = userService.getUserByEmail(email);
+            
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "User not found"));
+            }
+            return ResponseEntity.ok(Map.of(
+                    "id", user.getId(),
+                    "name", user.getName(),
+                    "email", user.getEmail(),
+                    "role", user.getRole()));
+        } catch (Exception e) {
+            System.out.println("Error in getUserInfo: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Error retrieving user information", 
+                                 "error", e.getMessage()));
+        }
     }
 
 }
