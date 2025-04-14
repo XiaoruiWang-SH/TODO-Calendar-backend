@@ -96,4 +96,10 @@ public class TaskController {
         int result = taskService.update(task, id);
         return result > 0 ? ResponseEntity.ok("update Success") : ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to update task");
     }    
+
+    @PostMapping("/delete/{id}")
+    public ResponseEntity<?> deleteTask(@PathVariable("id") int id) {
+        int result = taskService.delete(id);
+        return result > 0 ? ResponseEntity.ok("delete Success") : ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to delete task");
+    }
 }
