@@ -1,6 +1,6 @@
 # TODO-Calendar-backend
 
-A robust backend service for the <a link="(https://todocalendar.live"> TODO Calendar</a> application built with Spring Boot and modern security features.
+A robust backend service for the <a href="https://todocalendar.live">TODO Calendar</a> application built with Spring Boot and modern security features.
 
 ## Related Projects
 
