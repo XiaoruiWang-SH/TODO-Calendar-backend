@@ -1,6 +1,6 @@
 # TODO-Calendar-backend
 
-A robust backend service for a TODO Calendar application built with Spring Boot and modern security features.
+A robust backend service for the <a link="(https://todocalendar.live"> TODO Calendar</a> application built with Spring Boot and modern security features.
 
 ## Related Projects
 
@@ -28,6 +28,7 @@ A robust backend service for a TODO Calendar application built with Spring Boot 
 - Database integration with MySQL
 - Docker containerization
 - Environment-specific configurations (dev, test, prod)
+- HTTPS support with Nginx reverse proxy
 
 ## Prerequisites
 
